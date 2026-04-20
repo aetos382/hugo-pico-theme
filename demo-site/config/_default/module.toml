@@ -1,2 +1,4 @@
+replacements = 'github.com/aetos382/hugo-pico-theme -> ../..'
+
 [[imports]]
-  path = "github.com/aetos382/hugo-pico-theme"
+  path = 'github.com/aetos382/hugo-pico-theme'
