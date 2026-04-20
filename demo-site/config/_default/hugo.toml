@@ -1,0 +1,24 @@
+title = 'aetos.blog'
+copyright = 'Copyright (c) 2026 - aetos'
+defaultContentLanguage = 'ja'
+locale = 'ja'
+timeZone = 'Asia/Tokyo'
+hasCJKLanguage = true
+enableRobotsTXT = true
+enableGitInfo = true
+cleanDestinationDir = true
+
+[security]
+  [security.exec]
+    allow =[ '^asciidoctor$', '^git$', '^go$', '^sass$', '^npx$' ]
+    osEnv = [ '(?i)^(PATH|GEM_PATH|BUNDLE_PATH|BUNDLE_GEMFILE)$' ]
+
+[frontmatter]
+  lastmod = ['lastmod', ':git', ':fileModTime', ':default']
+
+[permalinks]
+  [permalinks.page]
+    post = '/post/:year/:month/:day/:slug'
+
+[taxonomies]
+  tag = 'tags'

@@ -1,0 +1,7 @@
+public/
+resources/
+bin/
+_vendor/
+packages/
+
+.hugo_build.lock
