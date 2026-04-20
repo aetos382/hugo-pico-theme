@@ -11,7 +11,7 @@ cleanDestinationDir = true
 [security]
   [security.exec]
     allow =[ '^asciidoctor$', '^git$', '^go$', '^sass$', '^npx$' ]
-    osEnv = [ '(?i)^(PATH|GEM_PATH|BUNDLE_PATH|BUNDLE_GEMFILE)$' ]
+    osEnv = [ '(?i)^(PATH)$' ]
 
 [frontmatter]
   lastmod = ['lastmod', ':git', ':fileModTime', ':default']
