@@ -10,7 +10,7 @@ cleanDestinationDir = true
 
 [security]
   [security.exec]
-    allow =[ '^asciidoctor$', '^git$', '^go$', '^sass$', '^npx$' ]
+    allow =[ '^git$', '^go$', '^sass$', '^npx$' ]
     osEnv = [ '(?i)^(PATH)$' ]
 
 [frontmatter]
