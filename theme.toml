@@ -3,11 +3,11 @@
 name = 'hugo-pico-theme'
 license = 'BSD-2-Clause-Patent'
 licenselink = 'https://opensource.org/license/bsd-2-clause-patent'
-description = ''
+description = 'experimental theme'
 
 homepage = 'https://github.com/aetos382/hugo-pico-theme'
 
-demosite = ''
+demosite = 'https://aetos382.github.io/hugo-pico-theme/'
 
 tags = ['blog']
 features = []
