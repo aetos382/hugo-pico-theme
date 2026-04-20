@@ -1,10 +1,10 @@
-title = 'aetos.blog'
+title = 'pico-theme'
 copyright = 'Copyright (c) 2026 - aetos'
 defaultContentLanguage = 'ja'
 locale = 'ja'
 timeZone = 'Asia/Tokyo'
 hasCJKLanguage = true
-enableRobotsTXT = true
+enableRobotsTXT = false
 enableGitInfo = true
 cleanDestinationDir = true
 
