@@ -22,6 +22,8 @@ RUN mkdir /usr/local/node && \
 ENV PATH=/usr/local/hugo:/usr/local/dart-sass:/usr/local/go/bin:/usr/local/node/bin:$PATH
 ENV GOTOOLCHAIN=local
 
+RUN hugo completion bash > /etc/bash_completion.d/hugo
+
 USER vscode
 
 RUN mkdir -p /home/vscode/.claude
