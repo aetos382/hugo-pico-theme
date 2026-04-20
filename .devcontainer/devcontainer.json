@@ -24,6 +24,7 @@
       "extensions": [
         "Anthropic.claude-code",
         "asciidoctor.asciidoctor-vscode",
+        "budparr.language-hugo-vscode",
         "eamodio.gitlens",
         "EditorConfig.EditorConfig",
         "github.vscode-github-actions",
