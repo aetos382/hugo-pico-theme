@@ -1,0 +1,22 @@
+# https://github.com/gohugoio/hugoThemesSiteBuilder#theme-configuration
+
+name = 'hugo-pico-theme'
+license = 'BSD-2-Clause-Patent'
+licenselink = 'https://opensource.org/license/bsd-2-clause-patent'
+description = ''
+
+homepage = 'https://github.com/aetos382/hugo-pico-theme'
+
+demosite = ''
+
+tags = ['blog']
+features = []
+
+[author]
+  name = 'aetos'
+  homepage = 'https://github.com/aetos382'
+
+[original]
+  author = 'aetos'
+  homepage = 'https://github.com/aetos382/hugo-pico-theme'
+  repo = 'https://github.com/aetos382/hugo-pico-theme.git'

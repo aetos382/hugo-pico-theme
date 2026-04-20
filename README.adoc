@@ -1,3 +1,0 @@
-= hugo-pico-theme
-
-TBD

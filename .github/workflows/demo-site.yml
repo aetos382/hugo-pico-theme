@@ -1,0 +1,12 @@
+name: demo-site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - run: echo "Building demo site..."
