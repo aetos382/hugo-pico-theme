@@ -2,14 +2,14 @@ name: publish-demo-site
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ 'main' ]
   workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: "pages"
+  group: 'pages'
   cancel-in-progress: false
 
 jobs:
