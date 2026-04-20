@@ -10,6 +10,10 @@ demosite = 'https://aetos382.github.io/hugo-pico-theme/'
 tags = ['blog']
 features = []
 
+[module]
+  [module.hugoVersion]
+    extended = false
+
 [author]
   name = 'aetos'
   homepage = 'https://github.com/aetos382'
