@@ -1,0 +1,36 @@
+{
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".."
+  },
+  "init": true,
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/powershell:2": {},
+    "ghcr.io/devcontainers/features/git-lfs:1": {},
+    "ghcr.io/devcontainers/features/node:1": {},
+    "ghcr.io/devcontainers-extra/features/actionlint:1": {},
+    "ghcr.io/devcontainers-extra/features/shellcheck:1": {}
+  },
+  "remoteUser": "vscode",
+  "remoteEnv": {
+    "CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR": "1",
+    "CLAUDE_CONFIG_DIR": "/home/vscode/.claude",
+    "TZ": "Asia/Tokyo"
+  },
+  "postCreateCommand": "bash ${containerWorkspaceFolder}/.devcontainer/postCreate.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "Anthropic.claude-code",
+        "asciidoctor.asciidoctor-vscode",
+        "eamodio.gitlens",
+        "EditorConfig.EditorConfig",
+        "github.vscode-github-actions",
+        "GitHub.vscode-pull-request-github",
+        "jimeh.actionlint",
+        "tamasfe.even-better-toml"
+      ]
+    }
+  }
+}
