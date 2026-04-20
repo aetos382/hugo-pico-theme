@@ -69,7 +69,7 @@ jobs:
         working-directory: demo-site
         run: >
           hugo build
-          --baseURL ${{ steps.pages.outputs.base-url }}
+          --baseURL ${{ steps.pages.outputs.base_url }}
 
       - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
@@ -78,7 +78,7 @@ jobs:
   deploy:
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page-url }}
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-24.04
     needs: build
     permissions:
