@@ -1,3 +1,14 @@
 {{ define "main" }}
-  home
+  {{ with .Content }}
+    {{ . }}
+  {{ end }}
+
+  {{ $count := default 10 .Site.Params.homePostsCount }}
+  {{ $pager := .Paginate (where .Site.RegularPages "Section" "posts") $count }}
+  {{ range $pager.Pages }}
+    <div class="post">
+      <div>{{ .PublishDate | time.Format (default "January 2, 2006 3:04:05 pm" .Site.Params.dateTimeFormat) }}</div>
+      <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+    </div>
+  {{ end }}
 {{ end }}
