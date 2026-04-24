@@ -7,28 +7,27 @@ description: Creates a new Hugo content file with proper front matter and direct
 
 This skill creates a new Hugo content file by running `hugo new`, following the project's conventions for path layout and front matter.
 
-## Step 1: Validate environment
+## Step 1: Find the Hugo site root
 
-Check the current working directory is a Hugo site:
-- Must contain a `content/` directory
-- Must have one of: `hugo.toml`, `hugo.yaml`, `hugo.json`, `config.toml`, `config.yaml`, `config.json`, or a `config/` directory
-- The `hugo` CLI must be available (`hugo version`)
+**Do not run Step 2 in parallel with this step.** Determine `SITE_ROOT` first, then proceed.
 
-If validation fails, show a clear error message and stop.
+Check in this order:
+1. Current working directory — if it contains a `content/` directory and one of `hugo.toml`, `hugo.yaml`, `hugo.json`, `config.toml`, `config.yaml`, `config.json`, or `config/`, it is the site root.
+2. If not, read `.claude/settings.json` and check each path listed under `additionalDirectories`. Use the first one that passes the same check.
 
-## Step 2: Load defaults from rules
+Also verify the `hugo` CLI is available (`hugo version`).
 
-Check for `.claude/rules/hugo-new-content.md` in the current working directory. If it exists, read it to find configured defaults. Look for lines like:
+If no valid Hugo site is found, show a clear error and stop. Set the found directory as `SITE_ROOT` for all subsequent steps.
 
-```
-extension: .adoc
-draft: false
-```
+## Step 2: Apply defaults from rules
 
-The file is free-form Markdown, so extract key-value pairs flexibly (e.g., `extension: .adoc`, `- extension: .adoc`, `**extension**: .adoc` are all valid). Defaults from this file override the built-in defaults below.
+Extension defaults should be set in `{SITE_ROOT}/CLAUDE.md`. Claude Code automatically loads CLAUDE.md from directories listed in `additionalDirectories`, injecting its content into the conversation context. Check the loaded CLAUDE.md content for key-value pairs.
 
-Built-in defaults (used when no rules file exists or a value is not set):
+Look for key-value pairs in the injected content (e.g., `extension: .adoc`, `- extension: .adoc`, `**extension**: .adoc` are all valid).
+
+Built-in defaults (used when no rules content is found in context):
 - `extension`: `.md`
+- `section`: `posts`
 
 ## Step 3: Collect parameters
 
@@ -38,6 +37,9 @@ If the user provided a title as an argument (e.g., `/hugo-new-content "私の最
 
 ### Extension
 If the user provided `--ext .adoc` or similar, use it. Otherwise use the rules default or built-in default (`.md`). Supported values: `.md`, `.adoc`, `.html`.
+
+### Section
+If the user provided `--section blog` or similar, use it. Otherwise use the rules default or built-in default (`posts`). The section determines the content subdirectory (e.g., `content/posts/`, `content/blog/`).
 
 ## Step 4: Generate the slug
 
@@ -56,33 +58,84 @@ The slug is used for the directory name. Rules:
 Use the current date (today's date from the system or the date in CLAUDE.md if provided):
 
 ```
-content/posts/{YYYY}/{MM}/{YYYY}-{MM}-{slug}/index{extension}
+content/{section}/{YYYY}/{MM}/{YYYY}-{MM}-{slug}/index{extension}
 ```
 
 Where `{MM}` is zero-padded (e.g., `04`).
 
-**Example:** Title "Hugo でブログを始める", date 2026-04-24, extension `.adoc`
+**Example:** Title "Hugo でブログを始める", date 2026-04-24, section `posts`, extension `.adoc`
 → `content/posts/2026/04/2026-04-getting-started-with-hugo-blog/index.adoc`
 
-## Step 6: Select the archetype
+## Step 6: Check for matching archetype
 
-Hugo picks the archetype automatically via `hugo new`. The priority is:
+Hugo picks the archetype automatically via `hugo new`, following this priority:
 
-1. Site-level `archetypes/posts{extension}` (e.g., `archetypes/posts.md`)
+1. Site-level `archetypes/{section}{extension}` (e.g., `archetypes/posts.adoc`)
 2. Site-level `archetypes/default{extension}`
-3. Theme-provided archetype (Hugo handles this automatically)
+3. Theme-provided archetype with the same extension
+
+**Before proceeding, verify an archetype exists for the chosen extension.**
+
+Collect archetype directories from two independent sources, then union the results.
+
+**Source 1 — Hugo modules** (`hugo config mounts`):
+
+Hugo resolves module dependencies transitively, so this covers all module-based themes in one step.
+
+```bash
+cd {SITE_ROOT} && hugo config mounts \
+  | jq -rs '[.[] | select(.mounts[]? | .target == "archetypes")] | .[].dir'
+```
+
+**Source 2 — git submodule / classic themes** (breadth-first traversal of `theme` keys):
+
+Hugo theme components can be nested: a theme's own config may reference further themes. Traverse them breadth-first until no new directories are found.
+
+1. Start with a queue containing `{SITE_ROOT}` and an empty visited set.
+2. For each directory in the queue:
+   a. Read `hugo.toml` or `config/_default/hugo.toml` in that directory.
+   b. Extract `themesDir` (default: `themes`) and `theme` (string or array — treat both uniformly as a list of names).
+   c. **Ignore any theme name that looks like a module path** (contains `.` before the first `/`, e.g. `github.com/foo/bar`). These are handled by Source 1.
+   d. For each remaining theme name, compute `candidate = {SITE_ROOT}/{themesDir}/{name}`. If that directory exists and has not been visited, add it to the queue and the visited set.
+3. The visited set (excluding `{SITE_ROOT}` itself) gives the local theme directories.
+
+Add `{theme_dir}/archetypes` for each discovered theme directory.
+
+**Search all collected directories for a usable archetype:**
+
+Hugo matches archetypes by both section/kind name AND extension. It looks for `archetypes/{section}{extension}` then `archetypes/default{extension}`. A `.md` archetype is NOT used as a fallback for a `.adoc` file.
+
+```bash
+find "{dir}/archetypes" -type f \( -name "{section}{extension}" -o -name "default{extension}" \) 2>/dev/null
+```
+
+**If found:** proceed silently.
+
+**If not found:**
+
+  ```
+  警告: archetype が見つかりませんでした。
+  確認したディレクトリ:
+    - {dir}/archetypes/  (hugo config mounts)
+    - {SITE_ROOT}/themes/{theme}/archetypes/  (hugo.toml theme キー)
+    ...
+  Hugo 組み込みの最小テンプレートで作成されます（カスタム front matter なし）。
+  ```
+  Ask the user: このまま続行しますか？ (y/n) — if no, stop.
 
 You don't need to pass `--kind` explicitly — just run `hugo new` with the content path and Hugo resolves the archetype.
 
 ## Step 7: Run hugo new
 
+Run from `SITE_ROOT`:
+
 ```bash
 hugo new {content-path}
 ```
 
-For example:
+For example (with `SITE_ROOT=demo-site/`):
 ```bash
-hugo new content/posts/2026/04/2026-04-getting-started-with-hugo-blog/index.adoc
+cd demo-site && hugo new content/posts/2026/04/2026-04-getting-started-with-hugo-blog/index.adoc
 ```
 
 If the `hugo new` command fails, show the error output and stop.

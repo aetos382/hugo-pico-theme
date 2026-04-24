@@ -24,5 +24,8 @@
       }
     }
   },
-  "language": "Japanese"
+  "language": "Japanese",
+  "additionalDirectories": [
+    "./demo-site"
+  ]
 }
