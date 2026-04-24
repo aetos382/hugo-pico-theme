@@ -4,6 +4,7 @@ ARG HUGO_VERSION=0.160.1
 ARG DART_SASS_VERSION=1.99.0
 ARG GO_VERSION=1.26.2
 ARG NODE_VERSION=24.15.0
+ARG APM_VERSION=0.9.2
 
 WORKDIR /tmp
 
@@ -19,7 +20,10 @@ RUN mkdir /usr/local/go && \
 RUN mkdir /usr/local/node && \
     curl -fqsLS https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x64.tar.xz | tar -C /usr/local/node -xJ --strip-components=1
 
-ENV PATH=/usr/local/hugo:/usr/local/dart-sass:/usr/local/go/bin:/usr/local/node/bin:$PATH
+RUN mkdir /usr/local/apm && \
+    curl -fqsLS https://github.com/microsoft/apm/releases/download/v${APM_VERSION}/apm-linux-x86_64.tar.gz | tar -C /usr/local/apm -xz --strip-components=1
+
+ENV PATH=/usr/local/hugo:/usr/local/dart-sass:/usr/local/go/bin:/usr/local/node/bin:/usr/local/apm:$PATH
 ENV GOTOOLCHAIN=local
 
 RUN hugo completion bash > /etc/bash_completion.d/hugo
