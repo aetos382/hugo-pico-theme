@@ -1,0 +1,43 @@
+{
+  "skill_name": "hugo-new-content",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I'm working in a Hugo site at /workspaces/hugo-pico-theme/demo-site. Please use the /hugo-new-content skill to create a new article with the title \"Getting Started with Hugo\".",
+      "expected_output": "A new file is created at content/posts/2026/04/2026-04-getting-started-with-hugo/index.md inside the demo-site directory. The file has YAML front matter with title, date, draft: true, and tags: []. The skill confirms the file was created and shows its path.",
+      "files": [],
+      "expectations": [
+        "The file content/posts/2026/04/2026-04-getting-started-with-hugo/index.md is created inside demo-site",
+        "The front matter contains title: getting started with hugo (or similar)",
+        "The front matter contains draft: true",
+        "The front matter contains tags",
+        "The skill reports the created file path to the user"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I'm working in a Hugo site at /workspaces/hugo-pico-theme/demo-site. Use the /hugo-new-content skill to create a new article with the Japanese title \"Hugo テーマのカスタマイズ方法\".",
+      "expected_output": "The title is translated to an English slug (e.g., 'customizing-hugo-theme' or similar). A new file is created at content/posts/2026/04/2026-04-{english-slug}/index.md inside demo-site with proper front matter. The Japanese title is preserved in the front matter title field.",
+      "files": [],
+      "expectations": [
+        "The created file path uses an English kebab-case slug (not Japanese characters)",
+        "The front matter title field contains the original Japanese title or an equivalent",
+        "The file extension is .md",
+        "The front matter contains draft: true",
+        "The skill reports the slug translation to the user"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "I'm working in a Hugo site at /workspaces/hugo-pico-theme/demo-site. There is a file at .claude/rules/hugo-new-content.md with the following content:\n\n```\n# hugo-new-content defaults\nextension: .adoc\ndraft: false\n```\n\nUse the /hugo-new-content skill to create a new article with the title \"My AsciiDoc Post\".",
+      "expected_output": "The skill reads the rules file and uses extension .adoc and draft: false. A new file is created at content/posts/2026/04/2026-04-my-asciidoc-post/index.adoc with draft: false in the front matter.",
+      "files": [],
+      "expectations": [
+        "The created file has .adoc extension",
+        "The front matter contains draft: false (overridden from rules file)",
+        "The file path matches content/posts/2026/04/2026-04-my-asciidoc-post/index.adoc",
+        "The skill acknowledges reading the rules file or using the configured defaults"
+      ]
+    }
+  ]
+}
