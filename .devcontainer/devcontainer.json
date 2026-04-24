@@ -8,7 +8,6 @@
     "ghcr.io/devcontainers/features/github-cli:1": {},
     "ghcr.io/devcontainers/features/powershell:2": {},
     "ghcr.io/devcontainers/features/git-lfs:1": {},
-    "ghcr.io/devcontainers/features/node:1": {},
     "ghcr.io/devcontainers-extra/features/actionlint:1": {},
     "ghcr.io/devcontainers-extra/features/shellcheck:1": {}
   },
@@ -25,6 +24,7 @@
         "Anthropic.claude-code",
         "asciidoctor.asciidoctor-vscode",
         "budparr.language-hugo-vscode",
+        "dbaeumer.vscode-eslint",
         "eamodio.gitlens",
         "EditorConfig.EditorConfig",
         "github.vscode-github-actions",
