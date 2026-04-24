@@ -7,6 +7,14 @@ description: Creates a new Hugo content file with proper front matter and direct
 
 This skill creates a new Hugo content file by running `hugo new`, following the project's conventions for path layout and front matter.
 
+## Parameters
+
+| Parameter | How to specify | Example | Default |
+|---|---|---|---|
+| Title | Positional argument | `/hugo-new-content "My First Post"` | Ask interactively |
+| Extension | `--ext <ext>` | `--ext .adoc` | CLAUDE.md setting, or `.md` |
+| Section | `--section <name>` | `--section blog` | CLAUDE.md setting, or `posts` |
+
 ## Step 1: Find the Hugo site root
 
 **Do not run Step 2 in parallel with this step.** Determine `SITE_ROOT` first, then proceed.
@@ -33,7 +41,7 @@ Built-in defaults (used when no rules content is found in context):
 
 ### Title
 If the user provided a title as an argument (e.g., `/hugo-new-content "私の最初の記事"`), use it. Otherwise, ask:
-> 記事のタイトルを入力してください:
+> Please enter the article title:
 
 ### Extension
 If the user provided `--ext .adoc` or similar, use it. Otherwise use the rules default or built-in default (`.md`). Supported values: `.md`, `.adoc`, `.html`.
@@ -114,14 +122,14 @@ find "{dir}/archetypes" -type f \( -name "{section}{extension}" -o -name "defaul
 **If not found:**
 
   ```
-  警告: archetype が見つかりませんでした。
-  確認したディレクトリ:
+  Warning: no matching archetype found.
+  Checked directories:
     - {dir}/archetypes/  (hugo config mounts)
-    - {SITE_ROOT}/themes/{theme}/archetypes/  (hugo.toml theme キー)
+    - {SITE_ROOT}/themes/{theme}/archetypes/  (hugo.toml theme key)
     ...
-  Hugo 組み込みの最小テンプレートで作成されます（カスタム front matter なし）。
+  The file will be created with Hugo's built-in minimal template (no custom front matter).
   ```
-  Ask the user: このまま続行しますか？ (y/n) — if no, stop.
+  Ask the user: Continue anyway? (y/n) — if no, stop.
 
 You don't need to pass `--kind` explicitly — just run `hugo new` with the content path and Hugo resolves the archetype.
 
@@ -168,9 +176,9 @@ Show:
 
 **Example output:**
 ```
-✓ 記事を作成しました
+✓ Content created
 
-ファイル: content/posts/2026/04/2026-04-getting-started-with-hugo-blog/index.adoc
-タイトル: Hugo でブログを始める
-スラグ:   getting-started-with-hugo-blog
+File:  content/posts/2026/04/2026-04-getting-started-with-hugo-blog/index.adoc
+Title: Hugo でブログを始める
+Slug:  getting-started-with-hugo-blog
 ```
